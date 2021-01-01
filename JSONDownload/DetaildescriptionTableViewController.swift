@@ -55,7 +55,8 @@ class DetaildescriptionTableViewController: UITableViewController {
     //儲存資料
     @IBAction func saveMovie(_ sender: Any) {
         let Moviedata = movieData(data: uploadmovie)
-        
+        saveLabel.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+       
         let url = URL(string: "https://sheetdb.io/api/v1/li2o9wgemqcus")
         var urlRequest = URLRequest(url: url!)
         
@@ -66,9 +67,9 @@ class DetaildescriptionTableViewController: UITableViewController {
         if let data = try? jsonEncoder.encode(Moviedata),
            let content = String(data: data, encoding: .utf8){
             print(content)
-            
             urlRequest.httpBody = data
-            URLSession.shared.dataTask(with: urlRequest) { (data, response, error) in
+            URLSession.shared.uploadTask(with: urlRequest, from: data) { (data, response, error) in
+                
                 if let data = data,
                    let dic = try? JSONDecoder().decode([String:Int].self, from: data),
                    dic["created"] == 1{
@@ -78,7 +79,7 @@ class DetaildescriptionTableViewController: UITableViewController {
                 }
             }
         }
-        saveLabel.setImage(UIImage(systemName: "heart.fill"), for: .normal)
+        
         
     }
     
